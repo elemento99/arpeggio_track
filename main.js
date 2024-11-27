@@ -430,5 +430,119 @@ console.log("triadas finales", selectedTriads)
 
 
 
-generateSelectedTriads(cyclicScaleSubset, chunks);
-console.log(selectedTriads)
+
+
+
+
+
+
+
+
+
+
+
+
+const allPianoNotes = ['C0', 'C#0', 'D0', 'D#0', 'E0', 'F0', 'F#0', 'G0', 'G#0', 'A0', 'A#0', 'B0', 
+            'C1', 'C#1', 'D1', 'D#1', 'E1', 'F1', 'F#1', 'G1', 'G#1', 'A1', 'A#1', 'B1', 
+            'C2', 'C#2', 'D2', 'D#2', 'E2', 'F2', 'F#2', 'G2', 'G#2', 'A2', 'A#2', 'B2', 
+            'C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3', 
+            'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4', 
+            'C5', 'C#5', 'D5', 'D#5', 'E5', 'F5', 'F#5', 'G5', 'G#5', 'A5', 'A#5', 'B5', 
+            'C6', 'C#6', 'D6', 'D#6', 'E6', 'F6', 'F#6', 'G6', 'G#6', 'A6', 'A#6', 'B6', 
+            'C7', 'C#7', 'D7', 'D#7', 'E7', 'F7', 'F#7', 'G7', 'G#7', 'A7', 'A#7', 'B7', 
+            'C8'];
+
+        const notaMinimaSelect = document.getElementById('notaMinima');
+        const notaMaximaSelect = document.getElementById('notaMaxima');
+        const resultado = document.getElementById('resultado');
+        const combinacionesDiv = document.getElementById('combinaciones');
+        const calcularCombinacionesBtn = document.getElementById('calcularCombinaciones');
+
+        // Llenar los select con las notas disponibles
+        allPianoNotes.forEach((note, index) => {
+            const optionMin = document.createElement('option');
+            const optionMax = document.createElement('option');
+            optionMin.value = index;
+            optionMin.textContent = note;
+            optionMax.value = index;
+            optionMax.textContent = note;
+            notaMinimaSelect.appendChild(optionMin);
+            notaMaximaSelect.appendChild(optionMax);
+        });
+
+        // Función para generar las combinaciones
+        function generarCombinaciones(rangoDisponible, conjuntoNotas) {
+            const notasDisponibles = rangoDisponible.split(', ');
+
+            // Función para agregar el número de octava a las notas
+            function generarNotasConNumeros() {
+                const combinaciones = [];
+                for (let i = 1; i <= 7; i++) {
+                    const combinacion = conjuntoNotas.map(nota => `${nota}${i}`);
+                    combinaciones.push(combinacion);
+                }
+                return combinaciones;
+            }
+
+            // Filtrar combinaciones que estén dentro del rango disponible
+            function filtrarCombinaciones(combinaciones) {
+                return combinaciones.filter(combinacion => 
+                    combinacion.every(nota => notasDisponibles.includes(nota))
+                );
+            }
+
+            // Generar las combinaciones con las notas y números de octava
+            const combinaciones = generarNotasConNumeros();
+
+            // Filtrar y devolver las combinaciones válidas
+            return filtrarCombinaciones(combinaciones);
+        }
+
+        // Función para obtener las notas seleccionadas
+        function generarNotasSeleccionadas() {
+            const notaMinima = parseInt(notaMinimaSelect.value, 10);
+            const notaMaxima = parseInt(notaMaximaSelect.value, 10);
+            if (notaMinima <= notaMaxima) {
+                return allPianoNotes.slice(notaMinima, notaMaxima + 1);
+            } else {
+                return [];
+            }
+        }
+
+        // Función para actualizar las combinaciones y mostrar los resultados
+        function actualizarNotasSeleccionadas() {
+            const rango = generarNotasSeleccionadas();
+            console.log("Rango seleccionado:", rango);  // Log del rango seleccionado
+            resultado.textContent = `Notas seleccionadas: ${rango.join(', ')}`;
+
+
+
+            console.log("Conjuntos de notas disponibles:", selectedTriads);  // Log de los conjuntos
+
+            // Generar las combinaciones para cada conjunto
+            let combinacionesGeneradas = [];
+            selectedTriads.forEach((conjunto, index) => {
+                const combinaciones = generarCombinaciones(rango.join(', '), conjunto);
+                console.log(`Combinaciones para el conjunto ${index + 1}:`, combinaciones);  // Log de combinaciones
+
+                if (combinaciones.length > 0) {
+                    combinacionesGeneradas.push(`Conjunto ${index + 1}: ${combinaciones.map(c => c.join(' - ')).join(', ')}`);
+                } else {
+                    combinacionesGeneradas.push(`Conjunto ${index + 1}: No hay combinaciones disponibles.`);
+                }
+            });
+
+            // Mostrar las combinaciones generadas en el DOM
+            combinacionesDiv.textContent = combinacionesGeneradas.join(' | ');
+
+            // Crear y mostrar el conjunto de acordes posibles
+            const acordesPosibles = selectedTriads;
+            console.log("Acordes posibles:", acordesPosibles);  // Log de acordes posibles
+        }
+
+        // Inicialización de los valores predeterminados
+        notaMinimaSelect.value = allPianoNotes.indexOf('C4');
+        notaMaximaSelect.value = allPianoNotes.indexOf('C5');
+
+        // Configurar el evento del botón para calcular las combinaciones
+        calcularCombinacionesBtn.addEventListener('click', actualizarNotasSeleccionadas);
