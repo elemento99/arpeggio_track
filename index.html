@@ -39,6 +39,67 @@
         
         <div id="selected-values"></div>
 
+
+
+
+
+
+
+        <table>
+            <thead>
+              <tr>
+                <th>Grado</th>
+                <th>
+                  Normal Triad<br>
+                  <input type="checkbox" id="toggle-normal-triad">
+                </th>
+                <th>
+                  7 Note<br>
+                  <input type="checkbox" id="toggle-seven-note">
+                </th>
+                <th>
+                  1st Inversion<br>
+                  <input type="checkbox" id="toggle-first-inversion">
+                </th>
+                <th>
+                  2nd Inversion<br>
+                  <input type="checkbox" id="toggle-second-inversion">
+                </th>
+                <th>
+                  3rd Inversion<br>
+                  <input type="checkbox" id="toggle-third-inversion">
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <script>
+                const rows = 7;
+                for (let i = 1; i <= rows; i++) {
+                  document.write(`
+                    <tr>
+                      <td>${i}</td>
+                      <td><input type="checkbox" id="normal-triad-${i}" class="normal-triad" data-row="${i}" checked></td>
+                      <td><input type="checkbox" id="seven-note-${i}" class="seven-note" data-row="${i}"></td>
+                      <td><input type="checkbox" id="first-inversion-${i}" class="first-inversion" data-row="${i}" disabled></td>
+                      <td><input type="checkbox" id="second-inversion-${i}" class="second-inversion" data-row="${i}" disabled></td>
+                      <td><input type="checkbox" id="third-inversion-${i}" class="third-inversion" data-row="${i}" disabled></td>
+                    </tr>
+                  `);
+                }
+              </script>
+            </tbody>
+          </table>
+        
+          <button id="selectAllBtn">Marcar Todas</button>
+          <button id="submitBtn">Submit</button>
+
+
+
+
+
+
+
+
     <script src="main.js"></script>
 </body>
 </html>
