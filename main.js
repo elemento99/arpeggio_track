@@ -124,22 +124,6 @@ updateSubset();
 
 console.log(cyclicScaleSubset)
 
-const chunks = [
-    "normal-triad-1", "normal-triad-first-inversion-1", "normal-triad-second-inversion-1", "normal-triad-third-inversion-1",
-    "seven-note-1", "seven-note-first-inversion-1", "seven-note-second-inversion-1", "seven-note-third-inversion-1",
-    "normal-triad-2", "normal-triad-first-inversion-2", "normal-triad-second-inversion-2", "normal-triad-third-inversion-2",
-    "seven-note-2", "seven-note-first-inversion-2", "seven-note-second-inversion-2", "seven-note-third-inversion-2",
-    "normal-triad-3", "normal-triad-first-inversion-3", "normal-triad-second-inversion-3", "normal-triad-third-inversion-3",
-    "seven-note-3", "seven-note-first-inversion-3", "seven-note-second-inversion-3", "seven-note-third-inversion-3",
-    "normal-triad-4", "normal-triad-first-inversion-4", "normal-triad-second-inversion-4", "normal-triad-third-inversion-4",
-    "seven-note-4", "seven-note-first-inversion-4", "seven-note-second-inversion-4", "seven-note-third-inversion-4",
-    "normal-triad-5", "normal-triad-first-inversion-5", "normal-triad-second-inversion-5", "normal-triad-third-inversion-5",
-    "seven-note-5", "seven-note-first-inversion-5", "seven-note-second-inversion-5", "seven-note-third-inversion-5",
-    "normal-triad-6", "normal-triad-first-inversion-6", "normal-triad-second-inversion-6", "normal-triad-third-inversion-6",
-    "seven-note-6", "seven-note-first-inversion-6", "seven-note-second-inversion-6", "seven-note-third-inversion-6",
-    "normal-triad-7", "normal-triad-first-inversion-7", "normal-triad-second-inversion-7", "normal-triad-third-inversion-7",
-    "seven-note-7", "seven-note-first-inversion-7", "seven-note-second-inversion-7", "seven-note-third-inversion-7"
-];
 
 
 
@@ -156,6 +140,106 @@ const chunks = [
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+let allSelected = false;
+
+// Event listeners para las casillas de la cabecera
+document.getElementById('toggle-normal-triad').addEventListener('change', (event) => {
+  document.querySelectorAll('.normal-triad').forEach((checkbox) => {
+    checkbox.checked = event.target.checked;
+    const row = checkbox.dataset.row;
+    toggleInversions(row);
+  });
+});
+
+document.getElementById('toggle-seven-note').addEventListener('change', (event) => {
+  document.querySelectorAll('.seven-note').forEach((checkbox) => {
+    checkbox.checked = event.target.checked;
+    const row = checkbox.dataset.row;
+    toggleInversions(row);
+    toggleThirdInversion(row, event.target.checked);
+  });
+});
+
+document.getElementById('toggle-first-inversion').addEventListener('change', (event) => {
+  document.querySelectorAll('.first-inversion').forEach((checkbox) => {
+    checkbox.checked = event.target.checked;
+  });
+});
+
+document.getElementById('toggle-second-inversion').addEventListener('change', (event) => {
+  document.querySelectorAll('.second-inversion').forEach((checkbox) => {
+    checkbox.checked = event.target.checked;
+  });
+});
+
+document.getElementById('toggle-third-inversion').addEventListener('change', (event) => {
+  document.querySelectorAll('.third-inversion').forEach((checkbox) => {
+    checkbox.checked = event.target.checked;
+  });
+});
+
+// Cambiar el estado de las inversiones dependiendo de las casillas
+function toggleInversions(row) {
+  const normalTriad = document.querySelector(`#normal-triad-${row}`).checked;
+  const sevenNote = document.querySelector(`#seven-note-${row}`).checked;
+
+  const enable = normalTriad || sevenNote;
+
+  document.querySelector(`#first-inversion-${row}`).disabled = !enable;
+  document.querySelector(`#second-inversion-${row}`).disabled = !enable;
+
+  if (!enable) {
+    document.querySelector(`#first-inversion-${row}`).checked = false;
+    document.querySelector(`#second-inversion-${row}`).checked = false;
+  }
+}
+
+function toggleThirdInversion(row, isEnabled) {
+  const thirdInversionCheckbox = document.querySelector(`#third-inversion-${row}`);
+  if (isEnabled) {
+    thirdInversionCheckbox.disabled = false;
+  } else {
+    thirdInversionCheckbox.disabled = true;
+    thirdInversionCheckbox.checked = false;
+  }
+}
+
+document.getElementById('selectAllBtn').addEventListener('click', () => {
+  allSelected = !allSelected;
+  document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    checkbox.checked = allSelected;
+
+    const row = checkbox.dataset.row;
+
+    if (checkbox.classList.contains('seven-note')) {
+      toggleThirdInversion(row, allSelected);
+    }
+    if (checkbox.classList.contains('normal-triad') || checkbox.classList.contains('seven-note')) {
+      toggleInversions(row);
+    }
+  });
+  document.getElementById('selectAllBtn').textContent = allSelected ? 'Desmarcar Todas' : 'Marcar Todas';
+  console.log(allSelected ? "Todas las casillas marcadas." : "Todas las casillas desmarcadas.");
+});
+
+
+
+let chunks = [];
+let chunksAuxiliar = [];
 
 
 
@@ -173,7 +257,7 @@ const chunks = [
 
 
 // desde aquí en adelante solo recibo el chunks y el cyclicScaleSubset
-console.log("este es el chunk q me está llegando desde el front end", chunks)
+console.log("este es el chunk auxiliar q me está llegando desde el front end", chunksAuxiliar)
 console.log("este es la escala q me llega del front", cyclicScaleSubset)
 
 
@@ -269,10 +353,67 @@ function generateSelectedTriads(cyclicScales, chunks) {
     });
 }
 
-console.log("estas son las triadas actuales",selectedTriads)
+
+document.getElementById('triadas').addEventListener('click', () => {
+    chunks = [];
+    // Iterar sobre las filas
+    for (let i = 1; i <= rows; i++) {
+      const normalTriad = document.querySelector(`#normal-triad-${i}`).checked;
+      const sevenNote = document.querySelector(`#seven-note-${i}`).checked;
+  
+      const firstInversion = document.querySelector(`#first-inversion-${i}`).checked;
+      const secondInversion = document.querySelector(`#second-inversion-${i}`).checked;
+      const thirdInversion = document.querySelector(`#third-inversion-${i}`).checked;
+  
+      // Combinaciones solo para normal-triad y seven-note
+      if (normalTriad || sevenNote) {
+        // Combinaciones para normal-triad con inversiones
+        if (normalTriad) {
+          chunks.push(`"normal-triad-${i}"`);
+          if (firstInversion) chunks.push(`"normal-triad-first-inversion-${i}"`);
+          if (secondInversion) chunks.push(`"normal-triad-second-inversion-${i}"`);
+          if (thirdInversion) chunks.push(`"normal-triad-third-inversion-${i}"`);
+        }
+  
+        // Combinaciones para seven-note con inversiones
+        if (sevenNote) {
+          chunks.push(`"seven-note-${i}"`);
+          if (firstInversion) chunks.push(`"seven-note-first-inversion-${i}"`);
+          if (secondInversion) chunks.push(`"seven-note-second-inversion-${i}"`);
+          if (thirdInversion) chunks.push(`"seven-note-third-inversion-${i}"`);
+        }
+      }
+    }
+  
+    // Guardar una copia en chunksAuxiliar
+    chunksAuxiliar = chunks;
+  
+    // Mostrar las combinaciones seleccionadas en la consola
+    console.log("este es el chunks que produce el submit ", chunks);
+  });
+  
+  // Evento para "triadas", atento a cambios en chunks
+  document.getElementById('triadas').addEventListener('click', () => {
+    // Llamamos a la función que necesita el valor actualizado de chunks
+    generateSelectedTriads(cyclicScaleSubset, chunks);
+  
+    // Muestra las triadas actuales en consola
+    console.log("estas son las triadas actuales", selectedTriads);
+
+    selectedTriads = [];
+
+    chunksAuxiliar = chunksAuxiliar.map(chunk => chunk.replace(/['"]+/g, ''));
+
+    console.log("este es el chunk auxiliar q me está llegando desde el front end a triadas", chunksAuxiliar)
+console.log("este es la escala q me llega del front", cyclicScaleSubset)
 
 
+    generateSelectedTriads(cyclicScaleSubset, chunksAuxiliar)
+    console.log("estas son las triadas generadas por el boton triadas",selectedTriads)
 
+})
+
+console.log("triadas finales", selectedTriads)
 
 
 
