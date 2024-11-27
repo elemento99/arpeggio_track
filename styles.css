@@ -1,0 +1,39 @@
+/* Tipografía general */
+body {
+    font-family: Arial, sans-serif; /* Cambia la fuente si lo prefieres */
+    font-size: 16px; /* Tamaño base de la fuente */
+}
+
+/* Contenedor de selectores */
+.selector-container {
+    display: flex;
+    justify-content: space-around;
+    width: 40%;
+    margin: 0 auto;
+}
+
+/* Estilo para los selectores */
+.selector {
+    width: 15%; /* 15% del ancho del contenedor */
+    height: 100%; /* Ocupa el 100% de la altura disponible dentro del contenedor */
+    font-size: 1.5rem; /* Aumentar el tamaño de la fuente en rem */
+    font-family: inherit; /* Mantener la tipografía heredada del body */
+    border: 2px solid #000; /* Bordes de los selectores */
+    border-radius: 0; /* Sin bordes redondeados */
+    padding: 0; /* Eliminar padding */
+    text-align: center; /* Centrar el texto */
+    background-color: #f1f1f1; /* Color de fondo de los selectores */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Aumentar tamaño de la fuente dentro de los selectores */
+.selector option {
+    font-size: 1rem; /* Ajustar el tamaño de la fuente dentro de las opciones */
+}
+
+.selector:focus {
+    outline: none; /* Eliminar borde por defecto en el enfoque */
+    border-color: #4d90fe; /* Borde azul al hacer focus */
+}
