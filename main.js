@@ -141,6 +141,42 @@ const chunks = [
     "seven-note-7", "seven-note-first-inversion-7", "seven-note-second-inversion-7", "seven-note-third-inversion-7"
 ];
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// desde aquí en adelante solo recibo el chunks y el cyclicScaleSubset
+console.log("este es el chunk q me está llegando desde el front end", chunks)
+console.log("este es la escala q me llega del front", cyclicScaleSubset)
+
+
 let selectedTriads = [];
 
 const triadPatterns = [
@@ -232,6 +268,26 @@ function generateSelectedTriads(cyclicScales, chunks) {
         }
     });
 }
+
+console.log("estas son las triadas actuales",selectedTriads)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 generateSelectedTriads(cyclicScaleSubset, chunks);
 console.log(selectedTriads)
