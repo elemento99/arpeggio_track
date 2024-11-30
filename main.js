@@ -394,26 +394,21 @@ document.getElementById('triadas').addEventListener('click', () => {
   
   // Evento para "triadas", atento a cambios en chunks
   document.getElementById('triadas').addEventListener('click', () => {
-    // Llamamos a la función que necesita el valor actualizado de chunks
+
     generateSelectedTriads(cyclicScaleSubset, chunks);
   
-    // Muestra las triadas actuales en consola
-    console.log("estas son las triadas actuales", selectedTriads);
-
     selectedTriads = [];
 
     chunksAuxiliar = chunksAuxiliar.map(chunk => chunk.replace(/['"]+/g, ''));
 
     console.log("este es el chunk auxiliar q me está llegando desde el front end a triadas", chunksAuxiliar)
-console.log("este es la escala q me llega del front", cyclicScaleSubset)
+
 
 
     generateSelectedTriads(cyclicScaleSubset, chunksAuxiliar)
     console.log("estas son las triadas generadas por el boton triadas",selectedTriads)
 
 })
-
-console.log("triadas finales", selectedTriads)
 
 
 
@@ -443,106 +438,192 @@ console.log("triadas finales", selectedTriads)
 
 
 const allPianoNotes = ['C0', 'C#0', 'D0', 'D#0', 'E0', 'F0', 'F#0', 'G0', 'G#0', 'A0', 'A#0', 'B0', 
-            'C1', 'C#1', 'D1', 'D#1', 'E1', 'F1', 'F#1', 'G1', 'G#1', 'A1', 'A#1', 'B1', 
-            'C2', 'C#2', 'D2', 'D#2', 'E2', 'F2', 'F#2', 'G2', 'G#2', 'A2', 'A#2', 'B2', 
-            'C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3', 
-            'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4', 
-            'C5', 'C#5', 'D5', 'D#5', 'E5', 'F5', 'F#5', 'G5', 'G#5', 'A5', 'A#5', 'B5', 
-            'C6', 'C#6', 'D6', 'D#6', 'E6', 'F6', 'F#6', 'G6', 'G#6', 'A6', 'A#6', 'B6', 
-            'C7', 'C#7', 'D7', 'D#7', 'E7', 'F7', 'F#7', 'G7', 'G#7', 'A7', 'A#7', 'B7', 
-            'C8'];
+    'C1', 'C#1', 'D1', 'D#1', 'E1', 'F1', 'F#1', 'G1', 'G#1', 'A1', 'A#1', 'B1', 
+    'C2', 'C#2', 'D2', 'D#2', 'E2', 'F2', 'F#2', 'G2', 'G#2', 'A2', 'A#2', 'B2', 
+    'C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3', 
+    'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4', 
+    'C5', 'C#5', 'D5', 'D#5', 'E5', 'F5', 'F#5', 'G5', 'G#5', 'A5', 'A#5', 'B5', 
+    'C6', 'C#6', 'D6', 'D#6', 'E6', 'F6', 'F#6', 'G6', 'G#6', 'A6', 'A#6', 'B6', 
+    'C7', 'C#7', 'D7', 'D#7', 'E7', 'F7', 'F#7', 'G7', 'G#7', 'A7', 'A#7', 'B7', 
+    'C8'];
 
-        const notaMinimaSelect = document.getElementById('notaMinima');
-        const notaMaximaSelect = document.getElementById('notaMaxima');
-        const resultado = document.getElementById('resultado');
-        const combinacionesDiv = document.getElementById('combinaciones');
-        const calcularCombinacionesBtn = document.getElementById('calcularCombinaciones');
+const notaMinimaSelect = document.getElementById('notaMinima');
+const notaMaximaSelect = document.getElementById('notaMaxima');
+const resultado = document.getElementById('resultado');
+const combinacionesDiv = document.getElementById('combinaciones');
+const calcularCombinacionesBtn = document.getElementById('calcularCombinaciones');
 
-        // Llenar los select con las notas disponibles
-        allPianoNotes.forEach((note, index) => {
-            const optionMin = document.createElement('option');
-            const optionMax = document.createElement('option');
-            optionMin.value = index;
-            optionMin.textContent = note;
-            optionMax.value = index;
-            optionMax.textContent = note;
-            notaMinimaSelect.appendChild(optionMin);
-            notaMaximaSelect.appendChild(optionMax);
-        });
+// Llenar los select con las notas disponibles
+allPianoNotes.forEach((note, index) => {
+    const optionMin = document.createElement('option');
+    const optionMax = document.createElement('option');
+    optionMin.value = index;
+    optionMin.textContent = note;
+    optionMax.value = index;
+    optionMax.textContent = note;
+    notaMinimaSelect.appendChild(optionMin);
+    notaMaximaSelect.appendChild(optionMax);
+});
 
-        // Función para generar las combinaciones
-        function generarCombinaciones(rangoDisponible, conjuntoNotas) {
-            const notasDisponibles = rangoDisponible.split(', ');
 
-            // Función para agregar el número de octava a las notas
-            function generarNotasConNumeros() {
-                const combinaciones = [];
-                for (let i = 1; i <= 7; i++) {
-                    const combinacion = conjuntoNotas.map(nota => `${nota}${i}`);
-                    combinaciones.push(combinacion);
-                }
-                return combinaciones;
-            }
 
-            // Filtrar combinaciones que estén dentro del rango disponible
-            function filtrarCombinaciones(combinaciones) {
-                return combinaciones.filter(combinacion => 
-                    combinacion.every(nota => notasDisponibles.includes(nota))
-                );
-            }
+const notasDual = {
+    'F#/Gb': 'F#',
+    'C#/Db': 'C#',
+    'D#/Eb': 'D#',
+    'G#/Ab': 'G#',
+    'A#/Bb': 'A#'
+};
 
-            // Generar las combinaciones con las notas y números de octava
-            const combinaciones = generarNotasConNumeros();
+// Función para normalizar las notas, teniendo en cuenta las notas con notación dual
+function normalizarNotas(nota) {
+    return notasDual[nota] || nota;
+}
 
-            // Filtrar y devolver las combinaciones válidas
-            return filtrarCombinaciones(combinaciones);
+
+// Función para generar las combinaciones
+function generarCombinaciones(rangoDisponible, conjuntoNotas) {
+    const notasDisponibles = rangoDisponible.split(', ');
+
+    // Función para agregar el número de octava a las notas
+    function generarNotasConNumeros() {
+        const combinaciones = [];
+        for (let i = 1; i <= 7; i++) {
+            const combinacion = conjuntoNotas.map(nota => `${nota}${i}`);
+            combinaciones.push(combinacion);
         }
+        return combinaciones;
+    }
 
-        // Función para obtener las notas seleccionadas
-        function generarNotasSeleccionadas() {
-            const notaMinima = parseInt(notaMinimaSelect.value, 10);
-            const notaMaxima = parseInt(notaMaximaSelect.value, 10);
-            if (notaMinima <= notaMaxima) {
-                return allPianoNotes.slice(notaMinima, notaMaxima + 1);
-            } else {
-                return [];
-            }
-        }
+    // Filtrar combinaciones que estén dentro del rango disponible
+    function filtrarCombinaciones(combinaciones) {
+        return combinaciones.filter(combinacion => 
+            combinacion.every(nota => notasDisponibles.includes(nota))
+        );
+    }
 
-        // Función para actualizar las combinaciones y mostrar los resultados
-        function actualizarNotasSeleccionadas() {
-            const rango = generarNotasSeleccionadas();
-            console.log("Rango seleccionado:", rango);  // Log del rango seleccionado
-            resultado.textContent = `Notas seleccionadas: ${rango.join(', ')}`;
+    // Generar las combinaciones con las notas y números de octava
+    const combinaciones = generarNotasConNumeros();
+
+    // Filtrar y devolver las combinaciones válidas
+    return filtrarCombinaciones(combinaciones);
+}
+
+// Función para obtener las notas seleccionadas
+function generarNotasSeleccionadas() {
+    const notaMinima = parseInt(notaMinimaSelect.value, 10);
+    const notaMaxima = parseInt(notaMaximaSelect.value, 10);
+    if (notaMinima <= notaMaxima) {
+        return allPianoNotes.slice(notaMinima, notaMaxima + 1);
+    } else {
+        return [];
+    }
+}
 
 
 
-            console.log("Conjuntos de notas disponibles:", selectedTriads);  // Log de los conjuntos
 
-            // Generar las combinaciones para cada conjunto
-            let combinacionesGeneradas = [];
-            selectedTriads.forEach((conjunto, index) => {
-                const combinaciones = generarCombinaciones(rango.join(', '), conjunto);
-                console.log(`Combinaciones para el conjunto ${index + 1}:`, combinaciones);  // Log de combinaciones
 
-                if (combinaciones.length > 0) {
-                    combinacionesGeneradas.push(`Conjunto ${index + 1}: ${combinaciones.map(c => c.join(' - ')).join(', ')}`);
-                } else {
-                    combinacionesGeneradas.push(`Conjunto ${index + 1}: No hay combinaciones disponibles.`);
-                }
-            });
+function filtrarNotas(rangoDisponible, conjunto) {
+  const notasEquivalentes = {
+    'C#': ['C#/Db'],
+    'D#': ['D#/Eb'],
+    F: ['F'],
+    G: ['G'],
+    A: ['A'],
+    B: ['B'],
+    C: ['C'],
+    D: ['D'],
+    E: ['E'],
+    'F#': ['F#'],
+    'G#': ['G#'],
+    'A#': ['A#'],
+  };
 
-            // Mostrar las combinaciones generadas en el DOM
-            combinacionesDiv.textContent = combinacionesGeneradas.join(' | ');
+  const notasFiltradas = rangoDisponible.split(', ').filter((nota) => {
+    const nombreNota = nota.replace(/[0-9]/g, '');
+    // Comprobar si el nombreNota existe en notasEquivalentes
+    if (notasEquivalentes[nombreNota]) {
+      return conjunto.some((conjuntoNota) =>
+        notasEquivalentes[nombreNota].includes(conjuntoNota)
+      );
+    }
+    return false;  // Si no existe, se filtra la nota
+  });
 
-            // Crear y mostrar el conjunto de acordes posibles
-            const acordesPosibles = selectedTriads;
-            console.log("Acordes posibles:", acordesPosibles);  // Log de acordes posibles
-        }
+  return notasFiltradas;
+}
 
-        // Inicialización de los valores predeterminados
-        notaMinimaSelect.value = allPianoNotes.indexOf('C4');
-        notaMaximaSelect.value = allPianoNotes.indexOf('C5');
 
-        // Configurar el evento del botón para calcular las combinaciones
-        calcularCombinacionesBtn.addEventListener('click', actualizarNotasSeleccionadas);
+function procesarRango(rango, conjunto) {
+  // Paso 1: Identificar el índice de la primera coincidencia con conjunto[0]
+  const primerElemento = conjunto[0];
+  const indiceInicio = rango.findIndex((nota) => {
+    const nombreNota = nota.replace(/\d/, ''); // Quitar la octava
+    return nombreNota === primerElemento;
+  });
+
+  // Paso 2: Filtrar eliminando todo a la izquierda de la coincidencia inicial
+  let rangoFiltrado =
+    indiceInicio !== -1 ? rango.slice(indiceInicio) : rango;
+
+  // Paso 3: Identificar el índice del último elemento que coincide con conjunto[conjunto.length - 1]
+  const ultimoElemento = conjunto[conjunto.length - 1];
+  const indiceFin = rangoFiltrado
+    .map((nota) => nota.replace(/\d/, '')) // Quitar las octavas para comparación
+    .lastIndexOf(ultimoElemento);
+
+  // Paso 4: Filtrar eliminando todo a la derecha de la última coincidencia
+  if (indiceFin !== -1) {
+    rangoFiltrado = rangoFiltrado.slice(0, indiceFin + 1); // Incluye índice final
+  }
+
+  // Paso 5: Subdividir el rango filtrado en bloques consecutivos
+  const bloques = [];
+  for (let i = 0; i < rangoFiltrado.length; i += conjunto.length) {
+    const subarray = rangoFiltrado.slice(i, i + conjunto.length);
+    if (subarray.length === conjunto.length) {
+      bloques.push(subarray);
+    }
+  }
+
+  return bloques
+}
+
+
+
+function aplicarFiltrarNotas(rangoDisponible, conjuntos) {
+  return conjuntos.map((conjunto) => filtrarNotas(rangoDisponible, conjunto));
+}
+
+
+
+function convertirNotas(notas) {
+  return "'"+ notas.join(', ') + "'";
+}
+
+
+
+
+calcularCombinacionesBtn.addEventListener('click', ()=> {
+
+const rangoDisponible = convertirNotas(generarNotasSeleccionadas())
+console.log(aplicarFiltrarNotas(rangoDisponible, selectedTriads),selectedTriads)
+
+
+
+
+
+});
+
+
+
+
+
+
+
+
+
+  
+  
+  

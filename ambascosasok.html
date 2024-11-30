@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Filtrar Notas - Array de Arrays</title>
+  </head>
+  <body>
+    <h1>Resultados Filtrados y Divididos</h1>
+    <div id="resultados"></div>
+    <!-- Contenedor para mostrar los resultados -->
+
+    <script>
+      function filtrarNotas(rangoDisponible, conjunto) {
+        // Definir un objeto que mapea las notas a sus equivalentes en nombre
+        const notasEquivalentes = {
+          'C#': ['C#/Db'],
+          'D#': ['D#/Eb'],
+          F: ['F'],
+          G: ['G'],
+          A: ['A'],
+          B: ['B'],
+          C: ['C'],
+          D: ['D'],
+          E: ['E'],
+          'F#': ['F#'],
+          'G#': ['G#'],
+          'A#': ['A#'],
+        };
+
+        // Filtrar las notas disponibles según el conjunto
+        const notasFiltradas = rangoDisponible.split(', ').filter((nota) => {
+          // Obtenemos la parte principal de la nota (sin número) para compararla
+          const nombreNota = nota.replace(/[0-9]/g, '');
+          return conjunto.some((conjuntoNota) =>
+            notasEquivalentes[nombreNota].includes(conjuntoNota)
+          );
+        });
+
+        return notasFiltradas; // Devolver como un array
+      }
+
+      // Ejemplo de uso
+      const rangoDisponible =
+        'C#3, D3, D#3, E3, F3, F#3, G3, G#3, A3, A#3, B3, C4, C#4, D4';
+      console.log(filtrarNotas(rangoDisponible, ['E', 'G', 'B'])); // ["E3", "G3", "B3"]
+      console.log(filtrarNotas(rangoDisponible, ['C#/Db', 'D#/Eb', 'F'])); // ["C#3", "D#3", "F3", "F#3", "C#4"]
+
+      function procesarRango(rango, conjunto) {
+        // Paso 1: Identificar el índice de la primera coincidencia con conjunto[0]
+        const primerElemento = conjunto[0];
+        const indiceInicio = rango.findIndex((nota) => {
+          const nombreNota = nota.replace(/\d/, ''); // Quitar la octava
+          return nombreNota === primerElemento;
+        });
+
+        // Paso 2: Filtrar eliminando todo a la izquierda de la coincidencia inicial
+        let rangoFiltrado =
+          indiceInicio !== -1 ? rango.slice(indiceInicio) : rango;
+
+        // Paso 3: Identificar el índice del último elemento que coincide con conjunto[conjunto.length - 1]
+        const ultimoElemento = conjunto[conjunto.length - 1];
+        const indiceFin = rangoFiltrado
+          .map((nota) => nota.replace(/\d/, '')) // Quitar las octavas para comparación
+          .lastIndexOf(ultimoElemento);
+
+        // Paso 4: Filtrar eliminando todo a la derecha de la última coincidencia
+        if (indiceFin !== -1) {
+          rangoFiltrado = rangoFiltrado.slice(0, indiceFin + 1); // Incluye índice final
+        }
+
+        // Paso 5: Subdividir el rango filtrado en bloques consecutivos
+        const bloques = [];
+        for (let i = 0; i < rangoFiltrado.length; i += conjunto.length) {
+          const subarray = rangoFiltrado.slice(i, i + conjunto.length);
+          if (subarray.length === conjunto.length) {
+            bloques.push(subarray);
+          }
+        }
+
+        return {
+          indiceInicio, 
+          indiceFin,
+          rangoFiltrado,
+          bloques
+        };
+      }
+
+      // Ejemplo de uso
+      const rango = ['C3', 'A3', 'A#3', 'C4', 'A4', 'A#4', 'C5', 'A5', 'A#5'];
+      const conjunto = ['A#', 'C', 'A'];
+
+      const resultado = procesarRango(rango, conjunto);
+
+      console.log('Índice de la primera coincidencia:', resultado.indiceInicio); // 2
+      console.log('Índice del último elemento:', resultado.indiceFin); // 4
+      console.log('Rango filtrado:', resultado.rangoFiltrado); // ["A#3", "C4", "A4"]
+      console.log('Bloques:', resultado.bloques); // [["A#3", "C4", "A4"], ["C5", "A5", "A#5"]]
+    </script>
+  </body>
+</html>
