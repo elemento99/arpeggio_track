@@ -27,7 +27,7 @@ class CyclicArray {
 }
 
 const notas = [
-    "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"
+    "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
 ];
 
 const cyclicNotas = new CyclicArray(notas);
@@ -603,12 +603,24 @@ function convertirNotas(notas) {
 }
 
 
-
+function aplicarProcesarRango(A, B, procesarRango) {
+  return A.map((a, index) => {
+    console.log("Index:", index);
+    return procesarRango(a, B[index]);
+  });
+}
 
 calcularCombinacionesBtn.addEventListener('click', ()=> {
 
 const rangoDisponible = convertirNotas(generarNotasSeleccionadas())
-console.log(aplicarFiltrarNotas(rangoDisponible, selectedTriads),selectedTriads)
+
+
+console.log("conjuntodeRangos",aplicarFiltrarNotas(rangoDisponible, selectedTriads))
+
+
+conjuntoDeRangos= aplicarFiltrarNotas(rangoDisponible, selectedTriads)
+
+console.log("hola",aplicarProcesarRango(conjuntoDeRangos,selectedTriads,procesarRango))
 
 
 
